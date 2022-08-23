@@ -12,7 +12,7 @@ module.exports = {
     },
   },
   devServer: {
-    host: "43.204.254.138",
+    host: "localhost",
   },
   configureWebpack: {
     resolve: {
