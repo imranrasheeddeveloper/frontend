@@ -54,6 +54,19 @@
         <b-form-group>
           <div class="d-flex align-items-center w-fit-content">
             <b-input-group>
+              <b-input-group-prepend>
+                <b-button
+                  v-ripple.400="'rgba(113, 102, 240, 0.15)'"
+                  size="sm"
+                  variant="outline-primary"
+                  :to="{
+                    name: 'sub_categories',
+                    params: { id: row.item.id },
+                  }"
+                >
+                  <feather-icon icon="SearchIcon" />
+                </b-button>
+              </b-input-group-prepend>
               <b-input-group-append>
                 <b-button
                   v-ripple.400="'rgba(40, 199, 111, 0.15)'"

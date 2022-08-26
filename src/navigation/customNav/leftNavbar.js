@@ -13,13 +13,13 @@ export default [
     action: 'view',
     resource: 'navbar',
   },
-  {
-    title: 'Sub Category',
-    route: 'categories_sub_categories',
-    icon: 'FileTextIcon',
-    action: 'view',
-    resource: 'navbar',
-  },
+  // {
+  //   title: 'Sub Category',
+  //   route: 'categories_sub_categories',
+  //   icon: 'FileTextIcon',
+  //   action: 'view',
+  //   resource: 'navbar',
+  // },
   {
     title: 'Groups',
     route: 'groups',

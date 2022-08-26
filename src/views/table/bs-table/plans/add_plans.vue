@@ -4,56 +4,39 @@
 
       <b-col md="6">
         <b-form-group
-          label="Title"
-          label-for="v-title"
+          label="Name"
+          label-for="v-name"
         >
           <b-form-input
-            id="v-title'"
-            v-model="formValues.title"
+            id="v-name'"
+            v-model="formValues.name"
           />
         </b-form-group>
       </b-col>
       <b-col md="6">
         <b-form-group
-          label="Attachment (*)."
-          label-for="attachment"
+          label="Color"
+          label-for="v-color"
         >
-          <b-form-file
-            id="attachment"
-            v-model="formValues.icon"
-            accept="image/* , .pdf"
-            placeholder="Upload attachment..."
-            drop-placeholder="Drop file here..."
-            @change="imageUpload($event)"
+          <b-form-input
+            id="v-color'"
+            v-model="formValues.color"
           />
         </b-form-group>
       </b-col>
-
       <b-col md="6">
-        <label for="v-date">Date</label>
-        <b-input-group>
-          <cleave
-            id="v-date"
-            v-model="formValues.createdAt"
-            class="form-control"
-            :raw="false"
-            :options="options.date"
-            placeholder="YYYY-MM-DD"
+        <b-form-group
+          label="Description"
+          label-for="v-description"
+        >
+          <b-form-textarea
+            id="v-description"
+            v-model="formValues.description"
+            placeholder="Write description Here.."
+            rows="2"
           />
-
-          <b-input-group-append>
-            <b-form-datepicker
-              v-model="formValues.createdAt"
-              show-decade-nav
-              button-only
-              right
-              locale="en-US"
-              aria-controls="v-date"
-            />
-          </b-input-group-append>
-        </b-input-group>
+        </b-form-group>
       </b-col>
-
       <!-- submit and reset -->
       <b-col md="12">
         <b-button
@@ -138,14 +121,16 @@ export default {
       isSubmitting: false,
 
       formValues: {
-        title: '',
-        icon: '',
-        createdAt: '',
+        name: '',
+        description: '',
+        color: '',
+        sub_category_id: '',
       },
 
     }
   },
   mounted() {
+    this.formValues.sub_category_id = this.$route.params.id
     this.initTrHeight()
   },
   created() {
@@ -160,13 +145,13 @@ export default {
       console.log('submit', this.formValues)
 
       axios
-        .post('/groups/create_categories', this.formValues)
+        .post('/groups/create_plan', this.formValues)
         .then(response => {
           if (response.data.hasOwnProperty('success')) {
             if (response.data.success === true) {
               console.log(response.data.data)
 
-              this.$router.replace('/categories').then(() => {
+              this.$router.replace(`/plans/${this.formValues.sub_category_id}`).then(() => {
                 this.$toast({
                   component: ToastificationContent,
                   position: 'top-right',
@@ -209,59 +194,58 @@ export default {
           console.error(error)
         })
     },
-    imageUpload(e)
-    {
-      axios
-        .post('/users/uploadFile', {
-          attachment: e.target.files[0],
-        })
-        .then(response => {
-          if (response.data.hasOwnProperty('success')) {
-            if (response.data.success === true) {
-              console.log(response.data.filePATH)
-              this.formValues.icon = response.data.filePATH
+    // imageUpload(e) {
+    //   axios
+    //     .post('/users/uploadFile', {
+    //       attachment: e.target.files[0],
+    //     })
+    //     .then(response => {
+    //       if (response.data.hasOwnProperty('success')) {
+    //         if (response.data.success === true) {
+    //           console.log(response.data.filePATH)
+    //           this.formValues.icon = response.data.filePATH
 
-              this.$toast({
-                component: ToastificationContent,
-                position: 'top-right',
-                props: {
-                  title: response.data.message,
-                  icon: 'EditIcon',
-                  variant: 'success',
-                },
-              })
-            } else {
-              this.isSubmitting = false
+    //           this.$toast({
+    //             component: ToastificationContent,
+    //             position: 'top-right',
+    //             props: {
+    //               title: response.data.message,
+    //               icon: 'EditIcon',
+    //               variant: 'success',
+    //             },
+    //           })
+    //         } else {
+    //           this.isSubmitting = false
 
-              this.$toast({
-                component: ToastificationContent,
-                position: 'top-right',
-                props: {
-                  title: response.data.message,
-                  icon: 'AlertCircleIcon',
-                  variant: 'danger',
-                },
-              })
-            }
-          } else {
-            this.isSubmitting = false
+    //           this.$toast({
+    //             component: ToastificationContent,
+    //             position: 'top-right',
+    //             props: {
+    //               title: response.data.message,
+    //               icon: 'AlertCircleIcon',
+    //               variant: 'danger',
+    //             },
+    //           })
+    //         }
+    //       } else {
+    //         this.isSubmitting = false
 
-            this.$toast({
-              component: ToastificationContent,
-              position: 'top-right',
-              props: {
-                title: 'Error',
-                icon: 'AlertCircleIcon',
-                variant: 'danger',
-                text: 'Something went wrong, try again later',
-              },
-            })
-          }
-        })
-        .catch(error => {
-          console.error(error)
-        })
-    },
+    //         this.$toast({
+    //           component: ToastificationContent,
+    //           position: 'top-right',
+    //           props: {
+    //             title: 'Error',
+    //             icon: 'AlertCircleIcon',
+    //             variant: 'danger',
+    //             text: 'Something went wrong, try again later',
+    //           },
+    //         })
+    //       }
+    //     })
+    //     .catch(error => {
+    //       console.error(error)
+    //     })
+    // },
     initTrHeight() {
       this.trSetHeight(null)
       this.$nextTick(() => {

@@ -252,9 +252,9 @@ export default [
     },
   },
   {
-    path: '/add_plans',
-    name: 'add_plans',
-    component: () => import('@/views/table/bs-table/plans/list_plans.vue'),
+    path: '/add_plans/:id',
+    name: 'add_plan',
+    component: () => import('@/views/table/bs-table/plans/add_plans.vue'),
     meta: {
       pageTitle: 'List Plans',
       breadcrumb: [{

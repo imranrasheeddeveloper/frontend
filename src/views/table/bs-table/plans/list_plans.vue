@@ -6,13 +6,13 @@
     <div class="custom-search d-flex justify-content-between">
       <b-form-group>
         <div class="d-flex align-items-center">
-          <!-- <label class="mr-1">Search</label> -->
-
           <b-input-group>
             <b-input-group-prepend>
               <b-button
                 variant="outline-primary"
-                @click="page=1, getUsers()"
+                @click="
+                  getDocuments();
+                "
               >
                 <feather-icon icon="SearchIcon" />
               </b-button>
@@ -21,29 +21,28 @@
               v-model="searchTerm"
               placeholder="Search"
               type="text"
-              class=" d-inline-block"
+              class="d-inline-block"
               @keyup="searchTimeOut()"
             />
-
-            <b-form-group>
-              <div class="d-flex align-items-center">
-                <b-input-group>
-                  <b-input-group-prepend>
-                    <b-button
-                      v-ripple.400="'rgba(255, 255, 255, 0.15)'"
-                      variant="primary"
-                      :to="{ name: 'add_plans' }"
-                      title="Create Plans"
-                    >
-                      ADD+
-                    </b-button>
-                  </b-input-group-prepend>
-                </b-input-group>
-              </div>
-            </b-form-group>
-
           </b-input-group>
-
+        </div>
+      </b-form-group>
+      <b-form-group>
+        <div class="d-flex align-items-center">
+          <b-input-group>
+            <b-input-group-prepend>
+              <b-button
+                v-ripple.400="'rgba(255, 255, 255, 0.15)'"
+                variant="primary"
+                :to="{ name: 'add_plan',
+                       params: {id: sub_cat_id},
+                }"
+                title="Create Plans"
+              >
+                ADD+
+              </b-button>
+            </b-input-group-prepend>
+          </b-input-group>
         </div>
       </b-form-group>
     </div>
@@ -100,7 +99,7 @@
                     v-ripple.400="'rgba(40, 199, 111, 0.15)'"
                     size="sm"
                     variant="outline-primary text-danger"
-                    @click="deletePayment(row.item.id)"
+                    @click="deleteDocument(row.item.id)"
                   >
                     <feather-icon icon="Trash2Icon" />
                   </b-button>
@@ -284,7 +283,7 @@ export default {
       this.popoverShow = false
     },
 
-    deletePayment(id) {
+    deleteDocument(id) {
       console.log(id)
       this.$swal({
         title: 'Are you sure?',
@@ -299,23 +298,33 @@ export default {
         buttonsStyling: false,
       }).then(result => {
         if (result.value) {
-          axios.post('/deletePayment', {
-            id,
-          }).then(response => {
-            if (response.data.hasOwnProperty('success')) {
-              if (response.data.success === true) {
-                this.getPymentRequests()
-
-                this.$toast({
-                  component: ToastificationContent,
-                  position: 'top-right',
-                  props: {
-                    title: 'Payment Deleted Successfully',
-                    icon: 'EditIcon',
-                    variant: 'success',
-                  },
-                })
-                console.log('Payment Deleted Successfully')
+          axios
+            .get(`groups/delete_plan/${id}`)
+            .then(response => {
+              if (response.data.hasOwnProperty('success')) {
+                if (response.data.success === true) {
+                  this.getUsers()
+                  this.$toast({
+                    component: ToastificationContent,
+                    position: 'top-right',
+                    props: {
+                      title: 'Plan Deleted Successfully',
+                      icon: 'EditIcon',
+                      variant: 'success',
+                    },
+                  })
+                } else {
+                  this.$toast({
+                    component: ToastificationContent,
+                    position: 'top-right',
+                    props: {
+                      title: 'Error',
+                      icon: 'AlertCircleIcon',
+                      variant: 'danger',
+                      text: 'Something went wrong, try again later',
+                    },
+                  })
+                }
               } else {
                 this.$toast({
                   component: ToastificationContent,
@@ -328,21 +337,10 @@ export default {
                   },
                 })
               }
-            } else {
-              this.$toast({
-                component: ToastificationContent,
-                position: 'top-right',
-                props: {
-                  title: 'Error',
-                  icon: 'AlertCircleIcon',
-                  variant: 'danger',
-                  text: 'Something went wrong, try again later',
-                },
-              })
-            }
-          }).catch(error => {
-            console.error(error)
-          })
+            })
+            .catch(error => {
+              console.error(error)
+            })
         }
       })
     },
