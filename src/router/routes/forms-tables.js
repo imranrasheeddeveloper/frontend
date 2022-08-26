@@ -116,24 +116,6 @@ export default [
     },
   },
 
-  /// ///////// Plans /////////////////////////////////
-
-  {
-    path: '/plans',
-    name: 'plans',
-    component: () => import('@/views/table/bs-table/sub_categories/list_categories_sub_categories.vue'),
-    meta: {
-      pageTitle: 'Sub categories',
-      breadcrumb: [{
-        text: 'List',
-      },
-      {
-        text: 'View',
-        active: true,
-      },
-      ],
-    },
-  },
   /// / users /////////////////////////////////
   {
     path: '/users',
@@ -248,6 +230,38 @@ export default [
       },
       {
         text: 'Promotions',
+        active: true,
+      },
+      ],
+    },
+  },
+  {
+    path: '/plans/:id',
+    name: 'plans',
+    component: () => import('@/views/table/bs-table/plans/list_plans.vue'),
+    meta: {
+      pageTitle: 'List Plans',
+      breadcrumb: [{
+        text: 'View',
+      },
+      {
+        text: 'Plans',
+        active: true,
+      },
+      ],
+    },
+  },
+  {
+    path: '/add_plans',
+    name: 'add_plans',
+    component: () => import('@/views/table/bs-table/plans/list_plans.vue'),
+    meta: {
+      pageTitle: 'List Plans',
+      breadcrumb: [{
+        text: 'View',
+      },
+      {
+        text: 'Plans',
         active: true,
       },
       ],

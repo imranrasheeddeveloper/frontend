@@ -61,6 +61,17 @@
 
               <b-input-group-append>
                 <b-button
+                  v-ripple.400="'rgba(113, 102, 240, 0.15)'"
+                  size="sm"
+                  variant="outline-primary"
+                  :to="{
+                    name: 'plans',
+                    params: { id: row.item.id },
+                  }"
+                >
+                  <feather-icon icon="SearchIcon" />
+                </b-button>
+                <b-button
                   v-ripple.400="'rgba(40, 199, 111, 0.15)'"
                   size="sm"
                   :to="{ name: 'edit_sub_categories', params: { id: row.item.id } }"

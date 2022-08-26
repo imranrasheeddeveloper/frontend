@@ -28,13 +28,6 @@ export default [
     resource: 'navbar',
   },
   {
-    title: 'Plans',
-    route: 'plans',
-    icon: 'ToolIcon',
-    action: 'view',
-    resource: 'navbar',
-  },
-  {
     title: 'Users',
     route: 'users',
     icon: 'BookIcon',
