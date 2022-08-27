@@ -267,6 +267,22 @@ export default [
       ],
     },
   },
+  {
+    path: '/edit_plans/:id',
+    name: 'edit_plan',
+    component: () => import('@/views/table/bs-table/plans/edit_plans.vue'),
+    meta: {
+      pageTitle: 'List Plans',
+      breadcrumb: [{
+        text: 'View',
+      },
+      {
+        text: 'Plans',
+        active: true,
+      },
+      ],
+    },
+  },
 
   {
     path: '/global-terms',

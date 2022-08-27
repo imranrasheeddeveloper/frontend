@@ -132,6 +132,7 @@ export default {
       isSubmitting: false,
 
       formValues: {
+        id: '',
         name: '',
         description: '',
         color: '',
@@ -143,6 +144,7 @@ export default {
   },
   mounted() {
     this.formValues.sub_category_id = this.$route.params.id
+    this.getPlanDetails()
     this.initTrHeight()
   },
   created() {
@@ -154,10 +156,10 @@ export default {
   methods: {
     Submit() {
       this.isSubmitting = true
-      console.log('submit', this.formValues)
+      console.log('submit', this.formValues.id)
 
       axios
-        .post('/groups/create_plan', this.formValues)
+        .post(`/groups/update_plan/${this.formValues.id}`, this.formValues)
         .then(response => {
           if (response.data.hasOwnProperty('success')) {
             if (response.data.success === true) {
@@ -206,7 +208,17 @@ export default {
           console.error(error)
         })
     },
-    // imageUpload(e) {
+    getPlanDetails() {
+      console.log(this.$route.params.id)
+      const appendWithurl = `/groups/get_plan_by_id/${this.$route.params.id}`
+      axios.get(appendWithurl).then(response => {
+        console.log(response.data)
+        this.formValues = response.data.data
+        console.log('Category Fetched')
+      }).catch(error => {
+        console.error(error)
+      })
+    },
     //   axios
     //     .post('/users/uploadFile', {
     //       attachment: e.target.files[0],

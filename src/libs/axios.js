@@ -4,7 +4,7 @@ import Vue from 'vue'
 import axios from 'axios'
 
 const axiosIns = axios.create({
-  baseURL: 'https://famger.com',
+  baseURL: 'http://localhost:4000',
 })
 
 Vue.prototype.$http = axiosIns

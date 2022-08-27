@@ -88,7 +88,7 @@
                   <b-button
                     v-ripple.400="'rgba(40, 199, 111, 0.15)'"
                     size="sm"
-                    :to="{name: 'updateuser', params: { id: row.item.id } }"
+                    :to="{name: 'edit_plan', params: { id: row.item.id } }"
                     variant="outline-primary text-success"
                   >
                     <feather-icon icon="EditIcon" />
@@ -250,6 +250,9 @@ export default {
         key: 'name', label: 'name', sortable: true, thClass: 'customHead',
       }, {
         key: 'description', label: 'description', sortable: true, thClass: 'customHead',
+      },
+      {
+        key: 'slots', label: 'slots', sortable: true, thClass: 'customHead',
       },
       ],
 
