@@ -235,19 +235,14 @@ export default {
   methods: {
     Submit() {
       this.isSubmitting = true
-      const body = this.formValues
-      console.log('submit', this.formValues)
-
       axios
-        .post('/groups/updateUser', {
-          body,
-        })
+        .post('/groups/updateUser', this.formValues)
         .then(response => {
           if (response.data.hasOwnProperty('success')) {
             if (response.data.success === true) {
               console.log(response.data.data)
 
-              this.$router.replace('/categories').then(() => {
+              this.$router.replace('/users').then(() => {
                 this.$toast({
                   component: ToastificationContent,
                   position: 'top-right',
