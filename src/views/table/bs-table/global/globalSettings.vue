@@ -15,6 +15,17 @@
       </b-col>
       <b-col md="6">
         <b-form-group
+          label="Payment Gateway Fees"
+          label-for="v-payment_fee"
+        >
+          <b-form-input
+            id="v-payment_fee'"
+            v-model="formValues.payment_fee"
+          />
+        </b-form-group>
+      </b-col>
+      <b-col md="6">
+        <b-form-group
           label="Privay URL"
           label-for="v-privay_url"
         >
@@ -179,6 +190,7 @@ export default {
         chat_woot_account_id: '',
         inbox_id: '',
         chat_api_key: '',
+        payment_fee: '',
       },
     }
   },

@@ -389,7 +389,7 @@ export default [
     name: 'updateuser',
     component: () => import('@/views/table/bs-table/users/edit_users.vue'),
     meta: {
-      pageTitle: 'Group Members',
+      pageTitle: 'Update User',
       breadcrumb: [{
         text: 'List',
       },
