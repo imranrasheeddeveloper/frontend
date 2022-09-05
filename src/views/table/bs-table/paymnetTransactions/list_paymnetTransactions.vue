@@ -115,6 +115,14 @@
                     {{ row.item.groups_payment_transactions.sub_category.category.title }}
                   </b-col>
                 </b-row>
+                <b-row class="border-bottom">
+                  <b-col cols="2">
+                    <strong>user Id</strong>
+                  </b-col>
+                  <b-col cols="10">
+                    {{ row.item.users_payment_transactions.userId }}
+                  </b-col>
+                </b-row>
               </b-card-text>
             </b-col>
           </b-row>
@@ -216,8 +224,9 @@ export default {
       }, {
         key: 'createdAt', labe: 'Date', sortable: true, thClass: 'customHead',
       },
-      ],
-      items: [
+      {
+        key: 'payment_id', labe: 'payment_id', sortable: true, thClass: 'customHead',
+      },
       ],
 
       searchTerm: '',

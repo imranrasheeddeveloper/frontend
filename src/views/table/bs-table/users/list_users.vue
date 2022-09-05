@@ -397,7 +397,7 @@ export default {
     getUsers() {
       this.isBusy = true
 
-      axios.get(`/groups/getAllUsers/${this.page}`)
+      axios.get(`/groups/getAllUsers/${this.page}/${this.searchTerm}`)
         .then(response => {
           console.log('response', response.data.data)
           this.items = response.data.data
@@ -423,7 +423,7 @@ export default {
       // Make a new timeout set to go off in 800ms
       timeout = setTimeout(() => {
         this.page = 1
-        this.getPymentRequests()
+        this.getUsers()
       }, 800)
     },
     statusVariant(ownerType) {
