@@ -383,6 +383,22 @@ export default [
       ],
     },
   },
+  {
+    path: '/group_cer',
+    name: 'Group Cer',
+    component: () => import('@/views/table/bs-table/group_cer/group_cer_list.vue'),
+    meta: {
+      pageTitle: 'Group Cer Confirmation',
+      breadcrumb: [{
+        text: 'List',
+      },
+      {
+        text: 'View',
+        active: true,
+      },
+      ],
+    },
+  },
 
   {
     path: '/updateuser/:id',

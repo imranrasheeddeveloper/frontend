@@ -104,6 +104,10 @@
         </div>
       </template>
 
+      <template #cell(last_active)="data">
+        {{ data.value | moment("DD/MM/YYYY") }}
+      </template>
+
       <template #cell(status)="data">
         <b-badge
           pill

@@ -24,38 +24,11 @@
               class=" d-inline-block"
               @keyup="searchTimeOut()"
             />
+          </b-input-group>
 
-            <b-input-group-append>
-              <b-button
-                v-ripple.400="'rgba(113, 102, 240, 0.15)'"
-                v-b-modal.modal-advancesearch
-                variant="outline-primary"
-              >
-                Advance search
-              </b-button>
-            </b-input-group-append>
-          </b-input-group>
-        </div>
-      </b-form-group>
-      <b-form-group>
-        <div class="d-flex align-items-center">
-          <b-input-group>
-            <b-input-group-prepend>
-              <b-button
-                v-ripple.400="'rgba(255, 255, 255, 0.15)'"
-                variant="primary"
-                :to="{ name: 'add_promotions' }"
-                title="Create Promotions"
-              >
-                ADD+
-              </b-button>
-            </b-input-group-prepend>
-          </b-input-group>
         </div>
       </b-form-group>
     </div>
-
-    <!-- Advance Search Model -->
 
     <b-table
       :items="items"
@@ -91,34 +64,13 @@
                     />
                   </b-button>
                 </b-input-group-prepend>
-
-                <b-input-group-append>
-                  <b-button
-                    v-ripple.400="'rgba(40, 199, 111, 0.15)'"
-                    size="sm"
-                    :to="{name: 'update_promo', params: { id: row.item.promo_code } }"
-                    variant="outline-primary text-success"
-                  >
-                    <feather-icon icon="EditIcon" />
-                  </b-button>
-                </b-input-group-append>
-                <b-input-group-append>
-                  <b-button
-                    v-ripple.400="'rgba(40, 199, 111, 0.15)'"
-                    size="sm"
-                    variant="outline-primary text-danger"
-                    @click="deletePayment(row.item.id)"
-                  >
-                    <feather-icon icon="Trash2Icon" />
-                  </b-button>
-                </b-input-group-append>
               </b-input-group>
             </div>
           </b-form-group>
         </div>
       </template>
 
-      <template #cell(status)="data">
+      <template #cell(is_working)="data">
         <b-badge
           pill
           :variant="statusVariant(data.value)"
@@ -127,11 +79,7 @@
         </b-badge>
       </template>
 
-      <template #cell(promo_start_date)="data">
-        {{ data.value | moment("DD/MM/YYYY") }}
-      </template>
-
-      <template #cell(promo_end_date)="data">
+      <template #cell(createdAt)="data">
         {{ data.value | moment("DD/MM/YYYY") }}
       </template>
 
@@ -147,35 +95,72 @@
               <b-card-text>
                 <b-row class="border-bottom">
                   <b-col cols="2">
-                    <strong>max uses user</strong>
+                    <strong>user_id</strong>
                   </b-col>
                   <b-col cols="10">
-                    {{ row.item.max_uses_user }}
+                    {{ row.item.user_group_cred_confirmation.userId }}
                   </b-col>
                 </b-row>
 
                 <b-row class="border-bottom">
                   <b-col cols="2">
-                    <strong>max uses total</strong>
+                    <strong>group id</strong>
                   </b-col>
                   <b-col cols="10">
-                    {{ row.item.max_uses_total }}
+                    {{ row.item.group_cred_confirmations.id }}
                   </b-col>
                 </b-row>
                 <b-row class="border-bottom">
                   <b-col cols="2">
-                    <strong>start date</strong>
+                    <strong>group_title</strong>
                   </b-col>
                   <b-col cols="10">
-                    {{ row.item.promo_start_date }}
+                    {{ row.item.group_cred_confirmations.group_title }}
                   </b-col>
                 </b-row>
                 <b-row class="border-bottom">
                   <b-col cols="2">
-                    <strong>end date</strong>
+                    <strong>email</strong>
                   </b-col>
                   <b-col cols="10">
-                    {{ row.item.promo_end_date }}
+                    {{ row.item.group_cred_confirmations.email }}
+                  </b-col>
+                </b-row>
+                <b-row class="border-bottom">
+                  <b-col cols="2">
+                    <strong>password</strong>
+                  </b-col>
+                  <b-col cols="10">
+                    {{ row.item.group_cred_confirmations.password }}
+                  </b-col>
+                </b-row>
+                <b-row class="border-bottom">
+                  <b-col cols="2">
+                    <strong>total_members</strong>
+                  </b-col>
+                  <b-col cols="10">
+                    <b-badge
+                      v-if="row.item.group_cred_confirmations.status === true"
+                      pill
+                      variant="success"
+                    >
+                      Acive
+                    </b-badge>
+
+                    <b-badge
+                      v-if="row.item.group_cred_confirmations.status === false"
+                      pill
+                      variant="danger"
+                    >
+                      closed
+                    </b-badge>
+                    <b-badge
+                      v-if="row.item.group_cred_confirmations.status === null"
+                      pill
+                      variant="danger"
+                    >
+                      closed
+                    </b-badge>
                   </b-col>
                 </b-row>
               </b-card-text>
@@ -279,11 +264,11 @@ export default {
       fields: [{ key: 'Options', thClass: 'customHead' }, {
         key: 'id', label: 'Id', sortable: true, thClass: 'customHead',
       }, {
-        key: 'promo_code', label: 'code', sortable: true, thClass: 'customHead',
+        key: 'user_id', label: 'userId', sortable: true, thClass: 'customHead',
       }, {
-        key: 'promo_discount', label: 'Discount%', sortable: true, thClass: 'customHead',
+        key: 'is_working', label: 'is_working', sortable: true, thClass: 'customHead',
       }, {
-        key: 'promo_status', labe: 'promo status', sortable: true, thClass: 'customHead',
+        key: 'createdAt', labe: 'createdAt', sortable: true, thClass: 'customHead',
       },
       ],
 
@@ -303,7 +288,7 @@ export default {
   },
 
   mounted() {
-    this.getPromotions()
+    this.getUsers()
   },
   methods: {
 
@@ -330,10 +315,12 @@ export default {
         buttonsStyling: false,
       }).then(result => {
         if (result.value) {
-          axios.get(`/promotions/delete_promotion/${id}`).then(response => {
+          axios.post('/deletePayment', {
+            id,
+          }).then(response => {
             if (response.data.hasOwnProperty('success')) {
               if (response.data.success === true) {
-                this.getPromotions()
+                this.getPymentRequests()
 
                 this.$toast({
                   component: ToastificationContent,
@@ -375,17 +362,15 @@ export default {
         }
       })
     },
-    getPromotions() {
+    getUsers() {
       this.isBusy = true
 
-      axios.get('/promotions/get_promos')
+      axios.get(`/groups/get_group_cer_confirmation/${this.page}/${this.searchTerm}`)
         .then(response => {
           console.log('response', response.data.data)
           this.items = response.data.data
-          this.base_url = response.data.base_url
           this.count = response.data.totalRows
           this.isBusy = false
-
           // TODO
         }).catch(error => {
           console.error(error)
@@ -395,7 +380,7 @@ export default {
     handlePageChange(value) {
       this.page = value
       this.isBusy = true
-      this.getPymentRequests()
+      this.getUsers()
     },
 
     searchTimeOut() {
@@ -404,7 +389,7 @@ export default {
       // Make a new timeout set to go off in 800ms
       timeout = setTimeout(() => {
         this.page = 1
-        this.getPymentRequests()
+        this.getUsers()
       }, 800)
     },
     statusVariant(ownerType) {
