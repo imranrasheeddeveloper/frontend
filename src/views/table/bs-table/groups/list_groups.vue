@@ -229,6 +229,32 @@
         </div>
       </template>
 
+      <template #cell(group_status)="data">
+        <b-form-checkbox
+          v-model="data.item.group_status"
+          :disabled="isSubmitting || data.item.group_status"
+          type="checkbox"
+          class="m-0"
+          :value="true"
+          @change="accept_status(data.item)"
+        >
+          <b-badge
+            pill
+            :variant="accept_statusVariant(data.value)"
+          >
+            <span
+              v-if="data.value == true"
+              class="text-white"
+            >Accept</span>
+            <span
+              v-if="data.value == false"
+              class="text-white"
+            >Not Accept</span>
+          </b-badge>
+        </b-form-checkbox>
+      </template>
+      <template #cell(approve)="data" />
+
     </b-table>
 
     <div class="d-flex justify-content-end">
@@ -317,6 +343,9 @@ export default {
       }, {
         key: 'cost_per_member', labe: 'cost', sortable: true, thClass: 'customHead',
       },
+      {
+        key: 'group_status', labe: 'Group Status', sortable: true, thClass: 'customHead',
+      },
       ],
       items: [
       ],
@@ -325,16 +354,6 @@ export default {
       pageSize: 10,
       page: 1,
       count: 0,
-
-      formValues: {
-        request_type: '',
-        request_owner: '',
-        request_owner_id: '',
-        payment_type: '',
-        status: '',
-
-      },
-
     }
   },
 
@@ -364,6 +383,77 @@ export default {
       this.popoverShow = false
     },
 
+    accept_status(item) {
+      console.log('item approve', item)
+      const { id, group_status } = item
+
+      console.log(id)
+      this.isSubmitting = true
+
+      this.$toast({
+        component: ToastificationContent,
+        position: 'top-right',
+        props: {
+          title: 'Transaction is in processing',
+          icon: 'InfoIcon',
+          variant: 'primary',
+        },
+      })
+
+      axios
+        .post('/groups/updateGroupApproveStatus', {
+          id,
+          group_status,
+        })
+        .then(response => {
+          if (response.data.hasOwnProperty('success')) {
+            if (response.data.success === true) {
+              // this.getDocuments();
+              this.getGroups()
+
+              this.$toast({
+                component: ToastificationContent,
+                position: 'top-right',
+                props: {
+                  title: 'Transaction updated Successfully',
+                  icon: 'EditIcon',
+                  variant: 'success',
+                },
+              })
+              console.log('Transaction Updated Successfully')
+              this.isSubmitting = false
+            } else {
+              this.$toast({
+                component: ToastificationContent,
+                position: 'top-right',
+                props: {
+                  title: 'Error',
+                  icon: 'AlertCircleIcon',
+                  variant: 'danger',
+                  text:
+                                        'Something went wrong, try again later',
+                },
+              })
+              this.isSubmitting = false
+            }
+          } else {
+            this.$toast({
+              component: ToastificationContent,
+              position: 'top-right',
+              props: {
+                title: 'Error',
+                icon: 'AlertCircleIcon',
+                variant: 'danger',
+                text: 'Something went wrong, try again later',
+              },
+            })
+          }
+        })
+        .catch(error => {
+          console.error(error)
+        })
+    },
+
     statusVariant(ownerType) {
       if (ownerType === 'Unpaid') {
         return 'danger'
@@ -381,7 +471,7 @@ export default {
     getGroups() {
       this.isBusy = true
 
-      axios.get(`/groups/getAllGroups/${this.page}`)
+      axios.get(`/groups/getAllGroups/${this.page}/${this.searchTerm}`)
 
         .then(response => {
           console.log('response', response.data.data)
@@ -400,6 +490,13 @@ export default {
       this.isBusy = true
       this.getGroups()
     },
+    accept_statusVariant(status) {
+      if (status === true) {
+        return 'success'
+      } if (status === false) {
+        return 'danger'
+      }
+    },
 
     searchTimeOut() {
       let timeout = null
@@ -407,7 +504,7 @@ export default {
       // Make a new timeout set to go off in 800ms
       timeout = setTimeout(() => {
         this.page = 1
-        this.getPymentRequests()
+        this.getGroups()
       }, 800)
     },
     deleteDocument(id) {
