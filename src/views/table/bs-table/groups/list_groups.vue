@@ -232,7 +232,7 @@
       <template #cell(group_status)="data">
         <b-form-checkbox
           v-model="data.item.group_status"
-          :disabled="isSubmitting || data.item.group_status"
+          :disabled="isSubmitting"
           type="checkbox"
           class="m-0"
           :value="true"
@@ -254,6 +254,32 @@
         </b-form-checkbox>
       </template>
       <template #cell(approve)="data" />
+
+      <template #cell(group_rejected)="data">
+        <b-form-checkbox
+          v-model="data.item.group_rejected"
+          :disabled="isSubmitting"
+          type="checkbox"
+          class="m-0"
+          :value="true"
+          @change="group_reject(data.item)"
+        >
+          <b-badge
+            pill
+            :variant="accept_statusVariant(data.value)"
+          >
+            <span
+              v-if="data.value == true"
+              class="text-white"
+            >Rejected</span>
+            <span
+              v-if="data.value == false"
+              class="text-white"
+            >Rejecte</span>
+          </b-badge>
+        </b-form-checkbox>
+      </template>
+
 
     </b-table>
 
@@ -346,6 +372,9 @@ export default {
       {
         key: 'group_status', labe: 'Group Status', sortable: true, thClass: 'customHead',
       },
+      {
+        key: 'group_rejected', labe: 'Reject Group', sortable: true, thClass: 'customHead',
+      },
       ],
       items: [
       ],
@@ -404,6 +433,75 @@ export default {
         .post('/groups/updateGroupApproveStatus', {
           id,
           group_status,
+        })
+        .then(response => {
+          if (response.data.hasOwnProperty('success')) {
+            if (response.data.success === true) {
+              // this.getDocuments();
+              this.getGroups()
+
+              this.$toast({
+                component: ToastificationContent,
+                position: 'top-right',
+                props: {
+                  title: 'Transaction updated Successfully',
+                  icon: 'EditIcon',
+                  variant: 'success',
+                },
+              })
+              console.log('Transaction Updated Successfully')
+              this.isSubmitting = false
+            } else {
+              this.$toast({
+                component: ToastificationContent,
+                position: 'top-right',
+                props: {
+                  title: 'Error',
+                  icon: 'AlertCircleIcon',
+                  variant: 'danger',
+                  text:
+                                        'Something went wrong, try again later',
+                },
+              })
+              this.isSubmitting = false
+            }
+          } else {
+            this.$toast({
+              component: ToastificationContent,
+              position: 'top-right',
+              props: {
+                title: 'Error',
+                icon: 'AlertCircleIcon',
+                variant: 'danger',
+                text: 'Something went wrong, try again later',
+              },
+            })
+          }
+        })
+        .catch(error => {
+          console.error(error)
+        })
+    },
+    group_reject(item) {
+      const { id, group_rejected } = item
+
+      console.log(id)
+      this.isSubmitting = true
+
+      this.$toast({
+        component: ToastificationContent,
+        position: 'top-right',
+        props: {
+          title: 'Transaction is in processing',
+          icon: 'InfoIcon',
+          variant: 'primary',
+        },
+      })
+
+      axios
+        .post('/groups/rejectGroup', {
+          id,
+          group_rejected,
         })
         .then(response => {
           if (response.data.hasOwnProperty('success')) {
@@ -523,7 +621,7 @@ export default {
       }).then(result => {
         if (result.value) {
           axios
-            .get(`/groups/closeGroup/${id}`)
+            .get(`/groups/delete_Group_by_id/${id}`)
             .then(response => {
               if (response.data.hasOwnProperty('success')) {
                 if (response.data.success === true) {
